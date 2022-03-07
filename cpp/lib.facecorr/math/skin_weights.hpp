@@ -1,5 +1,8 @@
 #pragma once
 
+namespace fcorr
+{
+
 #define TWOPI 6.2831853f
 #define SKIN_PRIOR 30/100.0f
 #define NONSKIN_PRIOR 70/100.0f
@@ -42,3 +45,5 @@ static const float Nonskin_Ws[16] = {
     0.0656, 0.1189, 0.0362, 0.0849, 
     0.0368, 0.0389, 0.0943, 0.0477
 };
+
+}

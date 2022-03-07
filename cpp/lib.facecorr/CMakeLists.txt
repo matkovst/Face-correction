@@ -12,4 +12,15 @@ endif(MSVC)
 file(GLOB_RECURSE HEADERS "*.hpp")
 file(GLOB_RECURSE SOURCES "*.cpp")
 
+# OpenMP
+find_package( OpenMP )
+if(OpenMP_CXX_FOUND)
+    add_compile_definitions(WITH_OPENMP)
+endif()
+
 add_library( ${PROJECT_NAME} ${HEADERS} ${SOURCES} )
+
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE OMP_THREADS=4)
+endif()

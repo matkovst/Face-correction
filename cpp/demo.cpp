@@ -44,6 +44,10 @@ int main(int argc, char *argv[])
     clock_t tStart = clock();
     std::int64_t fno = 1;
 
+    fcorr::Settings settings;
+    settings.ksize = 7;
+    settings.skin_thr = 0.25;
+
     while (true)
     {
         capture >> frame;
@@ -53,24 +57,30 @@ int main(int argc, char *argv[])
         
         // make input
         cv::Mat frame32f;
-        frame.convertTo(frame32f, CV_32FC3);    
+        frame.convertTo(frame32f, CV_32FC3);
         // std::vector<float> frame32fvec;
         // frame32fvec.assign((float*)frame32f.data, (float*)frame32f.data + frame32f.total() * frame32f.channels());
-        image im = load_image((float*)frame32f.data /* frame32fvec.data() */, frame32f.cols, frame32f.rows, frame32f.channels());
-        image imOut;
+        fcorr::Image im = fcorr::load_image_from_cvmat((float*)frame32f.data /* frame32fvec.data() */,
+                                            frame32f.cols,
+                                            frame32f.rows,
+                                            frame32f.channels());
+        fcorr::Image imOut;
 
         // magic
-        identity(im, imOut);
+        {
+            // fcorr::identity(im, imOut);
+            fcorr::correct(im, imOut, settings);
+        }
 
         // make output
         cv::Mat out(imOut.h, imOut.w, CV_32FC3, (void*)imOut.data);
 
         cv::imshow("Demo", out);
 
-        free_image(im);
-        free_image(imOut);
+        fcorr::free_image(im);
+        fcorr::free_image(imOut);
 
-        char c = static_cast<char>(cv::waitKey(10));
+        const char c = static_cast<char>(cv::waitKey(10));
         if(27 == c)
             break;
     }

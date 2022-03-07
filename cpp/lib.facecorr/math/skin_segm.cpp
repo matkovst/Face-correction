@@ -2,6 +2,9 @@
 
 #include "skin_segm.hpp"
 
+namespace fcorr
+{
+
 float multigauss(const float x[3], const float mu[3], const float sigma[3], float w)
 {
     float det = sigma[0] * sigma[1] * sigma[2];
@@ -63,4 +66,6 @@ float segment_skin_pixel(const float pixel[3])
     {
         return (skin_prob / (denom));
     }
+}
+
 }
