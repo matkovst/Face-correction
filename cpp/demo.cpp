@@ -44,7 +44,8 @@ int main(int argc, char *argv[])
     clock_t tStart = clock();
     std::int64_t fno = 1;
 
-    fcorr::Settings settings;
+    fcorr::FaceCorrector fcorrector;
+    fcorr::FaceCorrector::Settings settings;
     settings.ksize = 7;
     settings.skin_thr = 0.25;
 
@@ -69,11 +70,17 @@ int main(int argc, char *argv[])
         // magic
         {
             // fcorr::identity(im, imOut);
-            fcorr::correct(im, imOut, settings);
+            fcorrector.correct(im, imOut, settings);
         }
 
         // make output
         cv::Mat out(imOut.h, imOut.w, CV_32FC3, (void*)imOut.data);
+
+        // fcorr::Image skinMask = fcorr::from_image_to_cvmat(fcorrector.skinMask());
+        // cv::Mat outSkinMask(skinMask.h, skinMask.w, CV_32FC1, (void*)skinMask.data);
+        // std::cout << cv::sum(outSkinMask) << std::endl;
+        // cv::imshow("outSkinMask", outSkinMask);
+        // fcorr::free_image(skinMask);
 
         cv::imshow("Demo", out);
 
